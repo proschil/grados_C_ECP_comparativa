@@ -1,0 +1,7 @@
+1- En Imagen Personal / Peluquería hay una cuestión relacionada con IMP_C_005_4B Técnicas de corte de cabello y estilismo con estos dos ECP:
+UC2685_2 Realizar técnicas de corte del cabello
+UC2686_2 Realizar técnicas de barbería
+En el certificado antiguo ya está el ECP actualizado UC0351_2 CORTAR EL CABELLO Y REALIZAR EL ARREGLO Y RASURADO DE BARBA Y BIGOTE, pero (curiosamente) en el certificado nuevo están los ECP antiguos: UC2685_2 Realizar técnicas de corte del cabello y UC2686_2 Realizar técnicas de barbería
+[¿El INCUAL tendrá un listado de todos los cambios y actualizaciones de los ECP?]
+2- 
+
