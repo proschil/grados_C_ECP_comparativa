@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparador Grados C - Planes Antiguos vs Nuevos - Canarias 2025</title>
+    <style>
+        :root {
+            --color-verde: #2E8B57;
+            --color-azul: #4682B4;
+            --color-naranja: #FF8C42;
+            --color-rojo: #DC143C;
+            --color-purpura: #8A2BE2;
+            --color-borde: #e0e0e0;
+            --color-fondo: #f5f5f5;
+            --color-header: #f0f0f0;
+            --color-ecp-comun: rgba(46, 139, 87, 0.15);
+            --color-ecp-comun-borde: #2E8B57;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            background-color: #fff;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+        }
+        
+        .selector-container {
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: var(--color-fondo);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .grados-selector-container {
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: none;
+        }
+        
+        .grados-selector-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--color-borde);
+        }
+        
+        .grados-selector-titulo {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #333;
+        }
+        
+        .grados-selector-botones {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-selector {
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-selector:hover {
+            background-color: var(--color-fondo);
+        }
+        
+        .btn-selector.btn-todos {
+            border-color: var(--color-verde);
+            color: var(--color-verde);
+        }
+        
+        .btn-selector.btn-ninguno {
+            border-color: var(--color-rojo);
+            color: var(--color-rojo);
+        }
+        
+        .grados-lista {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid var(--color-borde);
+            border-radius: 4px;
+            background-color: #fafafa;
+        }
+        
+        .grado-checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+            border: 1px solid #e0e0e0;
+            background-color: white;
+        }
+        
+        .grado-checkbox-item:hover {
+            background-color: #f8f9fa;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .grado-checkbox {
+            width: 18px;
+            height: 18px;
+            margin-top: 3px;
+            cursor: pointer;
+            accent-color: var(--color-verde);
+            flex-shrink: 0;
+        }
+        
+        .grado-info {
+            flex: 1;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .grado-checkbox-codigo {
+            font-weight: bold;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+        
+        .grado-checkbox-codigo.plan-antiguo {
+            color: var(--color-purpura);
+        }
+        
+        .grado-checkbox-codigo.plan-nuevo {
+            color: var(--color-naranja);
+        }
+        
+        .grado-checkbox-nombre {
+            font-size: 0.85rem;
+            color: #555;
+            line-height: 1.3;
+        }
+        
+        .filtros-grupo {
+            display: grid;
+            grid-template-columns: 1fr 200px;
+            gap: 20px;
+            align-items: end;
+        }
+        
+        .selector-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .selector-field {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+            background-color: white;
+        }
+        
+        .nivel-selector {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .nivel-btn {
+            padding: 10px 20px;
+            border: 2px solid #ccc;
+            border-radius: 20px;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        
+        .nivel-btn:hover {
+            opacity: 0.8;
+        }
+        
+        .nivel-btn.active {
+            color: white;
+        }
+        
+        .nivel-btn.nivel-1 {
+            border-color: var(--color-verde);
+            color: var(--color-verde);
+        }
+        
+        .nivel-btn.nivel-1.active {
+            background-color: var(--color-verde);
+        }
+        
+        .nivel-btn.nivel-2 {
+            border-color: var(--color-rojo);
+            color: var(--color-rojo);
+        }
+        
+        .nivel-btn.nivel-2.active {
+            background-color: var(--color-rojo);
+        }
+        
+        .nivel-btn.nivel-3 {
+            border-color: var(--color-azul);
+            color: var(--color-azul);
+        }
+        
+        .nivel-btn.nivel-3.active {
+            background-color: var(--color-azul);
+        }
+        
+        .comparacion-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .planes-columna {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .planes-header {
+            padding: 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.3rem;
+            color: white;
+        }
+        
+        .planes-antiguos .planes-header {
+            background-color: var(--color-purpura);
+        }
+        
+        .planes-nuevos .planes-header {
+            background-color: var(--color-naranja);
+        }
+        
+        .grado-card {
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .grado-header {
+            padding: 15px;
+            background-color: var(--color-header);
+        }
+        
+        .grado-header.plan-antiguo {
+            border-left: 5px solid var(--color-purpura);
+        }
+        
+        .grado-header.plan-nuevo {
+            border-left: 5px solid var(--color-naranja);
+        }
+        
+        .grado-codigo {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        
+        .grado-codigo.plan-antiguo {
+            color: var(--color-purpura);
+        }
+        
+        .grado-codigo.plan-nuevo {
+            color: var(--color-naranja);
+        }
+        
+        .grado-nombre {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .grado-familia {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .ecp-lista {
+            padding: 0;
+        }
+        
+        .ecp-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--color-borde);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .ecp-item:last-child {
+            border-bottom: none;
+        }
+        
+        .ecp-item.ecp-comun {
+            background-color: var(--color-ecp-comun);
+            border-left: 3px solid var(--color-ecp-comun-borde);
+            position: relative;
+        }
+        
+        .ecp-item.ecp-comun::before {
+            content: "🔗";
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+        }
+        
+        .ecp-codigo {
+            background-color: var(--color-fondo);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #555;
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        .ecp-denominacion {
+            flex: 1;
+            color: #333;
+            line-height: 1.4;
+            font-size: 0.95rem;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-style: italic;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .contador-resultados {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            text-align: center;
+        }
+        
+        .contador-columna h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.1rem;
+        }
+        
+        .contador-antiguos h3 {
+            color: var(--color-purpura);
+        }
+        
+        .contador-nuevos h3 {
+            color: var(--color-naranja);
+        }
+        
+        .contador-numero {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .contador-texto {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .leyenda {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--color-fondo);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .leyenda-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .leyenda-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+        }
+        
+        .leyenda-ecp-comun {
+            background-color: var(--color-ecp-comun);
+            border: 2px solid var(--color-ecp-comun-borde);
+        }
+        
+        h5 {
+            color: #666;
+            font-size: 12px;
+            font-style: italic;
+            margin-top: 30px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        @media (max-width: 1024px) {
+            .comparacion-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .contador-resultados {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .filtros-grupo {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .nivel-selector {
+                justify-content: center;
+            }
+            
+            .ecp-item {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .ecp-codigo {
+                min-width: auto;
+                align-self: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Comparador Grados C - Planes Antiguos vs Nuevos</h1>
+        
+        <div class="selector-container">
+            <div class="filtros-grupo">
+                <div>
+                    <label for="familia-select" class="selector-label">Seleccione una familia profesional:</label>
+                    <select id="familia-select" class="selector-field">
+                        <option value="">-- Seleccione una familia profesional --</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="selector-label">Seleccione el nivel:</label>
+                    <div class="nivel-selector">
+                        <button class="nivel-btn nivel-1" data-nivel="1">Nivel 1</button>
+                        <button class="nivel-btn nivel-2" data-nivel="2">Nivel 2</button>
+                        <button class="nivel-btn nivel-3" data-nivel="3">Nivel 3</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="grados-selector-container" id="grados-selector">
+            <div class="grados-selector-header">
+                <div class="grados-selector-titulo">
+                    Seleccione los grados C a comparar:
+                    <span id="contador-seleccionados" style="color: #666; font-weight: normal; font-size: 0.9rem;"></span>
+                </div>
+                <div class="grados-selector-botones">
+                    <button class="btn-selector btn-todos" id="btn-seleccionar-todos">Seleccionar todos</button>
+                    <button class="btn-selector btn-ninguno" id="btn-deseleccionar-todos">Deseleccionar todos</button>
+                </div>
+            </div>
+            <div class="grados-lista" id="grados-lista">
+                <!-- Los checkboxes se generarán dinámicamente -->
+            </div>
+        </div>
+        
+        <div class="resultados">
+            <div class="contador-resultados" id="contador" style="display: none;">
+                <div class="contador-columna contador-antiguos">
+                    <h3>Planes Antiguos</h3>
+                    <div class="contador-numero" id="contador-antiguos-grados">0</div>
+                    <div class="contador-texto">grados con <span id="contador-antiguos-ecps">0</span> ECPs</div>
+                </div>
+                <div class="contador-columna contador-nuevos">
+                    <h3>Planes Nuevos</h3>
+                    <div class="contador-numero" id="contador-nuevos-grados">0</div>
+                    <div class="contador-texto">grados con <span id="contador-nuevos-ecps">0</span> ECPs</div>
+                </div>
+            </div>
+            
+            <div id="resultados-container">
+                <div class="no-data">Seleccione una familia profesional y un nivel para comparar los grados C</div>
+            </div>
+            
+            <div class="leyenda" style="display: none;" id="leyenda">
+                <strong>Leyenda:</strong>
+                <div class="leyenda-item">
+                    <div class="leyenda-color leyenda-ecp-comun"></div>
+                    <span>🔗 ECP común entre planes antiguos y nuevos</span>
+                </div>
+            </div>
+        </div>
+        
+        <h5>Febrero 2025</h5>
+    </div>
+
+    <script>
+        // Datos de ejemplo ampliados para mostrar la funcionalidad
+        let datos = [
+            {
+                "FAM_PROF": "Administración y Gestión",
+                "COD_C": "ADGD0308",
+                "DEN_C": "Actividades de gestión administrativa (Plan Antiguo)",
+                "NIVEL": "2",
+                "COD_ECP": "ECP_001",
+                "DEN_ECP": "Realizar operaciones básicas de contabilidad financiera"
+            },
+            {
+                "FAM_PROF": "Administración y Gestión",
+                "COD_C": "ADGD0308",
+                "DEN_C": "Actividades de gestión administrativa (Plan Antiguo)",
+                "NIVEL": "2",
+                "COD_ECP": "ECP_002",
+                "DEN_ECP": "Gestionar documentación administrativa y fiscal básica"
+            },
+            {
+                "FAM_PROF": "Administración y Gestión",
+                "COD_C": "ADGD0308",
+                "DEN_C": "Actividades de gestión administrativa (Plan Antiguo)",
+                "NIVEL": "2",
+                "COD_ECP": "ECP_008",
+                "DEN_ECP": "Manejar correspondencia empresarial"
+            },
+            {
+                "FAM_PROF": "Administración y Gestión",
+                "COD_C": "ADG_C_002_4B",
+                "DEN_C": "Actividades de apoyo administrativo en el ámbito contable, financiero y fiscal (Plan Nuevo)",
+                "NIVEL": "2",
+                "COD_ECP": "ECP_001",
+                "DEN_ECP": "Realizar operaciones básicas de contabilidad financiera"
+            },
+            {
+                "FAM_PROF": "Administración y Gestión",
+                "COD_C": "ADG_C_002_4B",
+                "DEN_C": "Actividades de apoyo administrativo en el ámbito contable, financiero y fiscal (Plan Nuevo)",
+                "NIVEL": "2",
+                "COD_ECP": "ECP_002",
+                "DEN_ECP": "Gestionar documentación administrativa y fiscal básica"
+            },
+            {
+                "FAM_PROF": "Administración y Gestión",
+                "COD_C": "ADG_C_002_4B",
+                "DEN_C": "Actividades de apoyo administrativo en el ámbito contable, financiero y fiscal (Plan Nuevo)",
+                "NIVEL": "2",
+                "COD_ECP": "ECP_009",
+                "DEN_ECP": "Utilizar herramientas digitales para gestión administrativa"
+            },
+            {
+                "FAM_PROF": "Administración y Gestión",
+                "COD_C": "ADG_C_003_4B",
+                "DEN_C": "Gestión administrativa de recursos humanos (Plan Nuevo)",
+                "NIVEL": "2",
+                "COD_ECP": "ECP_003",
+                "DEN_ECP": "Realizar trámites administrativos de personal"
+            },
+            {
+                "FAM_PROF": "Informática y Comunicaciones",
+                "COD_C": "IFCD0110",
+                "DEN_C": "Confección y publicación de páginas web (Plan Antiguo)",
+                "NIVEL": "1",
+                "COD_ECP": "ECP_004",
+                "DEN_ECP": "Crear páginas web estáticas con HTML y CSS"
+            },
+            {
+                "FAM_PROF": "Informática y Comunicaciones",
+                "COD_C": "IFCD0110",
+                "DEN_C": "Confección y publicación de páginas web (Plan Antiguo)",
+                "NIVEL": "1",
+                "COD_ECP": "ECP_010",
+                "DEN_ECP": "Publicar contenidos web básicos"
+            },
+            {
+                "FAM_PROF": "Informática y Comunicaciones",
+                "COD_C": "IFC_C_001_4B",
+                "DEN_C": "Desarrollo de aplicaciones web básicas (Plan Nuevo)",
+                "NIVEL": "1",
+                "COD_ECP": "ECP_004",
+                "DEN_ECP": "Crear páginas web estáticas con HTML y CSS"
+            },
+            {
+                "FAM_PROF": "Informática y Comunicaciones",
+                "COD_C": "IFC_C_001_4B",
+                "DEN_C": "Desarrollo de aplicaciones web básicas (Plan Nuevo)",
+                "NIVEL": "1",
+                "COD_ECP": "ECP_005",
+                "DEN_ECP": "Implementar funcionalidades básicas con JavaScript"
+            },
+            {
+                "FAM_PROF": "Informática y Comunicaciones",
+                "COD_C": "IFC_C_002_4B",
+                "DEN_C": "Administración de sistemas informáticos avanzados (Plan Nuevo)",
+                "NIVEL": "3",
+                "COD_ECP": "ECP_006",
+                "DEN_ECP": "Configurar y mantener servidores de red"
+            },
+            {
+                "FAM_PROF": "Hostelería y Turismo",
+                "COD_C": "HOTA0308",
+                "DEN_C": "Operaciones básicas de catering (Plan Antiguo)",
+                "NIVEL": "1",
+                "COD_ECP": "ECP_007",
+                "DEN_ECP": "Atender clientes en servicios de restauración"
+            },
+            {
+                "FAM_PROF": "Hostelería y Turismo",
+                "COD_C": "HOT_C_001_4B",
+                "DEN_C": "Servicios básicos de restauración (Plan Nuevo)",
+                "NIVEL": "1",
+                "COD_ECP": "ECP_007",
+                "DEN_ECP": "Atender clientes en servicios de restauración"
+            }
+        ];
+
+        let familiaSeleccionada = '';
+        let nivelSeleccionado = '';
+        let gradosDisponibles = [];
+        let gradosSeleccionados = new Set();
+
+        // Función para cargar el CSV
+        function cargarCSV() {
+            fetch('GRADOS_C_ECP.csv')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('No se pudo cargar el archivo CSV');
+                    }
+                    return response.text();
+                })
+                .then(text => {
+                    const lines = text.split('\n');
+                    if (lines.length <= 1) {
+                        throw new Error('El archivo CSV está vacío o no tiene datos');
+                    }
+                    
+                    const headers = lines[0].split(';').map(header => header.trim().replace(/"/g, ''));
+                    console.log('Headers encontrados:', headers);
+                    
+                    datos = [];
+                    
+                    for (let i = 1; i < lines.length; i++) {
+                        const line = lines[i].trim();
+                        if (!line) continue;
+                        
+                        const valores = parseCSVLine(line);
+                        
+                        if (valores.length !== headers.length) {
+                            console.warn(`Línea ${i + 1} tiene ${valores.length} columnas, esperadas ${headers.length}`);
+                            continue;
+                        }
+                        
+                        const obj = {};
+                        for (let j = 0; j < headers.length; j++) {
+                            obj[headers[j]] = valores[j].trim().replace(/"/g, '');
+                        }
+                        datos.push(obj);
+                    }
+                    
+                    console.log(`Cargados ${datos.length} registros del CSV`);
+                    
+                    if (datos.length === 0) {
+                        throw new Error('No se encontraron datos válidos en el CSV');
+                    }
+                    
+                    cargarFamilias();
+                })
+                .catch(error => {
+                    console.error('Error al cargar el CSV:', error);
+                    document.getElementById('resultados-container').innerHTML = `
+                        <div class="no-data">
+                            <strong>Error al cargar los datos:</strong><br>
+                            ${error.message}<br><br>
+                            Verifique que el archivo 'GRADOS_C_ECP.csv' esté en la misma carpeta que este archivo HTML.
+                            <br><br>Mostrando datos de ejemplo para demostración.
+                        </div>`;
+                    
+                    console.log('Cargando datos de ejemplo...');
+                    cargarFamilias();
+                });
+        }
+        
+        function parseCSVLine(line) {
+            const campos = line.split(';');
+            return campos.map(campo => campo.trim().replace(/^"|"$/g, ''));
+        }
+
+        // Función para determinar si es plan antiguo o nuevo
+        function esPlanAntiguo(codigo) {
+            return !codigo.includes('_');
+        }
+
+        // Función para extraer familias únicas
+        function cargarFamilias() {
+            const selectFamilia = document.getElementById('familia-select');
+            const familias = [...new Set(datos.map(item => item.FAM_PROF))].sort();
+            
+            selectFamilia.innerHTML = '<option value="">-- Seleccione una familia profesional --</option>';
+            
+            familias.forEach(familia => {
+                const option = document.createElement('option');
+                option.value = familia;
+                option.textContent = familia;
+                selectFamilia.appendChild(option);
+            });
+        }
+
+        // Función para mostrar selector de grados
+        function mostrarSelectorGrados() {
+            const selectorContainer = document.getElementById('grados-selector');
+            const listaContainer = document.getElementById('grados-lista');
+            const contadorSeleccionados = document.getElementById('contador-seleccionados');
+            
+            if (!familiaSeleccionada || !nivelSeleccionado) {
+                selectorContainer.style.display = 'none';
+                return;
+            }
+
+            // Filtrar y agrupar datos para obtener grados únicos
+            const datosFilrados = datos.filter(item => 
+                item.FAM_PROF === familiaSeleccionada && 
+                item.NIVEL === nivelSeleccionado
+            );
+
+            if (datosFilrados.length === 0) {
+                selectorContainer.style.display = 'none';
+                return;
+            }
+
+            gradosDisponibles = agruparPorGrado(datosFilrados);
+            
+            // Seleccionar todos por defecto
+            gradosSeleccionados = new Set(gradosDisponibles.map(g => g.codigo));
+            
+            // Generar HTML de checkboxes
+            let html = '';
+            gradosDisponibles.forEach(grado => {
+                const clasePlan = grado.esPlanAntiguo ? 'plan-antiguo' : 'plan-nuevo';
+                const planTipo = grado.esPlanAntiguo ? '(Antiguo)' : '(Nuevo)';
+                
+                html += `
+                    <div class="grado-checkbox-item">
+                        <input type="checkbox" 
+                               class="grado-checkbox" 
+                               id="grado-${grado.codigo}" 
+                               value="${grado.codigo}" 
+                               checked>
+                        <label for="grado-${grado.codigo}" class="grado-info">
+                            <div class="grado-checkbox-codigo ${clasePlan}">
+                                ${grado.codigo} ${planTipo}
+                            </div>
+                            <div class="grado-checkbox-nombre">${grado.nombre}</div>
+                        </label>
+                    </div>
+                `;
+            });
+            
+            listaContainer.innerHTML = html;
+            actualizarContadorSeleccionados();
+            selectorContainer.style.display = 'block';
+            
+            // Agregar event listeners a los checkboxes
+            document.querySelectorAll('.grado-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', (e) => {
+                    if (e.target.checked) {
+                        gradosSeleccionados.add(e.target.value);
+                    } else {
+                        gradosSeleccionados.delete(e.target.value);
+                    }
+                    actualizarContadorSeleccionados();
+                    mostrarResultados();
+                });
+            });
+            
+            // Event listeners para labels (hacer clickeable toda el área)
+            document.querySelectorAll('.grado-info').forEach(label => {
+                label.addEventListener('click', (e) => {
+                    if (e.target.tagName !== 'INPUT') {
+                        const checkbox = document.getElementById(label.getAttribute('for'));
+                        checkbox.click();
+                    }
+                });
+            });
+        }
+        
+        // Función para actualizar contador de seleccionados
+        function actualizarContadorSeleccionados() {
+            const contador = document.getElementById('contador-seleccionados');
+            const total = gradosDisponibles.length;
+            const seleccionados = gradosSeleccionados.size;
+            contador.textContent = `(${seleccionados} de ${total} seleccionados)`;
+        }
+        function agruparPorGrado(datosFilrados) {
+            const grupos = {};
+            
+            datosFilrados.forEach(item => {
+                const key = item.COD_C;
+                if (!grupos[key]) {
+                    grupos[key] = {
+                        codigo: item.COD_C,
+                        nombre: item.DEN_C,
+                        familia: item.FAM_PROF,
+                        nivel: item.NIVEL,
+                        esPlanAntiguo: esPlanAntiguo(item.COD_C),
+                        ecps: []
+                    };
+                }
+                
+                if (!grupos[key].ecps.find(ecp => ecp.codigo === item.COD_ECP)) {
+                    grupos[key].ecps.push({
+                        codigo: item.COD_ECP,
+                        denominacion: item.DEN_ECP
+                    });
+                }
+            });
+            
+            return Object.values(grupos);
+        }
+
+        // Paleta de colores para ECPs repetidos
+        const coloresECP = [
+            '#FFE6CC', '#E6F3FF', '#E6FFE6', '#FFE6F3', '#F3E6FF', 
+            '#FFFFE6', '#E6FFFF', '#FFE6E6', '#F0FFE6', '#E6E6FF',
+            '#FFF0E6', '#E6FFF0', '#F3FFE6', '#E6F0FF', '#FFE6F0',
+            '#F0E6FF', '#E6FFE6', '#FFE6CC', '#CCE6FF', '#E6CCFF'
+        ];
+
+        const bordeColoresECP = [
+            '#FF8C42', '#4682B4', '#2E8B57', '#DC143C', '#8A2BE2',
+            '#FFD700', '#00CED1', '#FF6347', '#32CD32', '#6495ED',
+            '#FFA500', '#20B2AA', '#90EE90', '#87CEEB', '#FFB6C1',
+            '#DDA0DD', '#98FB98', '#F4A460', '#87CEFA', '#DA70D6'
+        ];
+
+        // Función para analizar ECPs y asignar colores
+        function analizarECPs(todosLosGrados) {
+            const conteoECPs = {};
+            const asignacionColores = {};
+            
+            // Contar cuántas veces aparece cada ECP
+            todosLosGrados.forEach(grado => {
+                grado.ecps.forEach(ecp => {
+                    conteoECPs[ecp.codigo] = (conteoECPs[ecp.codigo] || 0) + 1;
+                });
+            });
+            
+            // Asignar colores solo a ECPs que aparecen más de una vez
+            let indiceColor = 0;
+            Object.keys(conteoECPs).forEach(codECP => {
+                if (conteoECPs[codECP] > 1) {
+                    asignacionColores[codECP] = {
+                        fondo: coloresECP[indiceColor % coloresECP.length],
+                        borde: bordeColoresECP[indiceColor % bordeColoresECP.length],
+                        repeticiones: conteoECPs[codECP]
+                    };
+                    indiceColor++;
+                }
+            });
+            
+            return asignacionColores;
+        }
+
+        // Función para encontrar ECPs comunes entre planes antiguos y nuevos
+        function encontrarECPsComunes(planesAntiguos, planesNuevos) {
+            const ecpsAntiguos = new Set();
+            const ecpsNuevos = new Set();
+            
+            planesAntiguos.forEach(grado => {
+                grado.ecps.forEach(ecp => ecpsAntiguos.add(ecp.codigo));
+            });
+            
+            planesNuevos.forEach(grado => {
+                grado.ecps.forEach(ecp => ecpsNuevos.add(ecp.codigo));
+            });
+            
+            return new Set([...ecpsAntiguos].filter(ecp => ecpsNuevos.has(ecp)));
+        }
+
+        // Función para generar HTML de una columna de planes
+        function generarHTMLColumna(grados, ecpsComunes, asignacionColores, tipo) {
+            if (grados.length === 0) {
+                return '<div class="no-data">No se encontraron grados para este tipo de plan</div>';
+            }
+
+            let html = '';
+            grados.forEach(grado => {
+                const clasePlan = grado.esPlanAntiguo ? 'plan-antiguo' : 'plan-nuevo';
+                html += `
+                    <div class="grado-card">
+                        <div class="grado-header ${clasePlan}">
+                            <div class="grado-codigo ${clasePlan}">${grado.codigo}</div>
+                            <div class="grado-nombre">${grado.nombre}</div>
+                            <div class="grado-familia">Familia: ${grado.familia} | Nivel: ${grado.nivel}</div>
+                        </div>
+                        <div class="ecp-lista">
+                `;
+                
+                grado.ecps.forEach(ecp => {
+                    const esComun = ecpsComunes.has(ecp.codigo);
+                    const tieneColor = asignacionColores[ecp.codigo];
+                    
+                    let estiloECP = '';
+                    let iconoExtra = '';
+                    let claseComun = '';
+                    
+                    if (tieneColor) {
+                        // ECP que se repite en múltiples grados
+                        estiloECP = `style="background-color: ${tieneColor.fondo}; border-left: 3px solid ${tieneColor.borde};"`;
+                        iconoExtra = `<span style="background-color: ${tieneColor.borde}; color: white; padding: 2px 6px; border-radius: 10px; font-size: 0.7rem; font-weight: bold; margin-left: 5px;">${tieneColor.repeticiones}x</span>`;
+                    } else if (esComun) {
+                        // ECP común entre planes antiguos y nuevos pero que no se repite en múltiples grados
+                        claseComun = 'ecp-comun';
+                        iconoExtra = '<span style="margin-left: 5px;">🔗</span>';
+                    }
+                    
+                    html += `
+                        <div class="ecp-item ${claseComun}" ${estiloECP}>
+                            <div class="ecp-codigo">${ecp.codigo}</div>
+                            <div class="ecp-denominacion">
+                                ${ecp.denominacion}
+                                ${iconoExtra}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+
+            return html;
+        }
+
+        // Función para mostrar resultados
+        function mostrarResultados() {
+            const container = document.getElementById('resultados-container');
+            const contador = document.getElementById('contador');
+            const leyenda = document.getElementById('leyenda');
+            
+            if (!familiaSeleccionada || !nivelSeleccionado) {
+                container.innerHTML = '<div class="no-data">Seleccione una familia profesional y un nivel para comparar los grados C</div>';
+                contador.style.display = 'none';
+                leyenda.style.display = 'none';
+                return;
+            }
+
+            if (gradosSeleccionados.size === 0) {
+                container.innerHTML = '<div class="no-data">Seleccione al menos un grado C para mostrar la comparación</div>';
+                contador.style.display = 'none';
+                leyenda.style.display = 'none';
+                return;
+            }
+
+            // Filtrar solo los grados seleccionados
+            const gradosAMostrar = gradosDisponibles.filter(grado => 
+                gradosSeleccionados.has(grado.codigo)
+            );
+
+            if (gradosAMostrar.length === 0) {
+                container.innerHTML = '<div class="no-data">No hay grados seleccionados para mostrar</div>';
+                contador.style.display = 'none';
+                leyenda.style.display = 'none';
+                return;
+            }
+
+            // Separar por tipo de plan
+            const planesAntiguos = gradosAMostrar.filter(g => g.esPlanAntiguo);
+            const planesNuevos = gradosAMostrar.filter(g => !g.esPlanAntiguo);
+            
+            // Analizar ECPs y asignar colores (solo de los grados seleccionados)
+            const asignacionColores = analizarECPs(gradosAMostrar);
+            
+            // Encontrar ECPs comunes entre planes antiguos y nuevos (solo de los seleccionados)
+            const ecpsComunes = encontrarECPsComunes(planesAntiguos, planesNuevos);
+            
+            // Actualizar contadores
+            const totalECPsAntiguos = planesAntiguos.reduce((sum, grado) => sum + grado.ecps.length, 0);
+            const totalECPsNuevos = planesNuevos.reduce((sum, grado) => sum + grado.ecps.length, 0);
+            
+            document.getElementById('contador-antiguos-grados').textContent = planesAntiguos.length;
+            document.getElementById('contador-antiguos-ecps').textContent = totalECPsAntiguos;
+            document.getElementById('contador-nuevos-grados').textContent = planesNuevos.length;
+            document.getElementById('contador-nuevos-ecps').textContent = totalECPsNuevos;
+            
+            contador.style.display = 'grid';
+            
+            // Generar leyenda dinámica
+            generarLeyenda(leyenda, asignacionColores, ecpsComunes);
+            
+            // Generar HTML de comparación
+            const htmlAntiguos = generarHTMLColumna(planesAntiguos, ecpsComunes, asignacionColores, 'antiguos');
+            const htmlNuevos = generarHTMLColumna(planesNuevos, ecpsComunes, asignacionColores, 'nuevos');
+
+            container.innerHTML = `
+                <div class="comparacion-container">
+                    <div class="planes-columna planes-antiguos">
+                        <div class="planes-header">
+                            📋 Planes Antiguos (${planesAntiguos.length})
+                        </div>
+                        ${htmlAntiguos}
+                    </div>
+                    <div class="planes-columna planes-nuevos">
+                        <div class="planes-header">
+                            🆕 Planes Nuevos (${planesNuevos.length})
+                        </div>
+                        ${htmlNuevos}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Función para generar leyenda dinámica
+        function generarLeyenda(leyenda, asignacionColores, ecpsComunes) {
+            const ecpsRepetidos = Object.keys(asignacionColores);
+            const hayECPsComunes = ecpsComunes.size > 0;
+            
+            if (ecpsRepetidos.length === 0 && !hayECPsComunes) {
+                leyenda.style.display = 'none';
+                return;
+            }
+            
+            let htmlLeyenda = '<strong>Leyenda:</strong><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 10px; margin-top: 10px;">';
+            
+            // ECPs comunes entre planes antiguos y nuevos (que no se repiten en múltiples grados)
+            if (hayECPsComunes) {
+                const ecpsComunesNoRepetidos = [...ecpsComunes].filter(ecp => !asignacionColores[ecp]);
+                if (ecpsComunesNoRepetidos.length > 0) {
+                    htmlLeyenda += `
+                        <div class="leyenda-item">
+                            <div class="leyenda-color leyenda-ecp-comun"></div>
+                            <span>🔗 ECP común entre planes antiguos y nuevos</span>
+                        </div>
+                    `;
+                }
+            }
+            
+            // ECPs que se repiten en múltiples grados
+            ecpsRepetidos.forEach(codECP => {
+                const info = asignacionColores[codECP];
+                htmlLeyenda += `
+                    <div class="leyenda-item">
+                        <div class="leyenda-color" style="background-color: ${info.fondo}; border: 2px solid ${info.borde};"></div>
+                        <span><strong>${codECP}</strong> (aparece en ${info.repeticiones} grados)</span>
+                    </div>
+                `;
+            });
+            
+            htmlLeyenda += '</div>';
+            leyenda.innerHTML = htmlLeyenda;
+            leyenda.style.display = 'block';
+        }
+
+        // Eventos
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarCSV();
+            
+            // Selector de familia
+            document.getElementById('familia-select').addEventListener('change', (e) => {
+                familiaSeleccionada = e.target.value;
+                mostrarSelectorGrados();
+                mostrarResultados();
+            });
+            
+            // Botones de nivel
+            document.querySelectorAll('.nivel-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    // Remover clase active de todos los botones
+                    document.querySelectorAll('.nivel-btn').forEach(b => b.classList.remove('active'));
+                    
+                    // Agregar clase active al botón clickeado
+                    e.target.classList.add('active');
+                    
+                    nivelSeleccionado = e.target.dataset.nivel;
+                    mostrarSelectorGrados();
+                    mostrarResultados();
+                });
+            });
+            
+            // Botón seleccionar todos
+            document.getElementById('btn-seleccionar-todos').addEventListener('click', () => {
+                document.querySelectorAll('.grado-checkbox').forEach(checkbox => {
+                    checkbox.checked = true;
+                    gradosSeleccionados.add(checkbox.value);
+                });
+                actualizarContadorSeleccionados();
+                mostrarResultados();
+            });
+            
+            // Botón deseleccionar todos
+            document.getElementById('btn-deseleccionar-todos').addEventListener('click', () => {
+                document.querySelectorAll('.grado-checkbox').forEach(checkbox => {
+                    checkbox.checked = false;
+                    gradosSeleccionados.delete(checkbox.value);
+                });
+                actualizarContadorSeleccionados();
+                mostrarResultados();
+            });
+        });
+    </script>
+</body>
+</html>
